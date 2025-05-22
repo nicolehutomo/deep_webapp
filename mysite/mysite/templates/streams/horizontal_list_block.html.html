@@ -1,0 +1,14 @@
+<div class="horizontal-list-block container py-4">
+    {% if self.title %}
+        <h3 class="mb-3 text-center">{{ self.title }}</h3>
+    {% endif %}
+
+    <div class="d-flex flex-row overflow-auto gap-4">
+        {% for item in self.items %}
+            <div class="text-center" style="min-width: 200px;">
+                <img src="{{ item.image.url }}" alt="{{ item.image.alt }}" class="img-fluid mb-2" style="height: 150px; object-fit: cover;">
+                <p>{{ item.text }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>

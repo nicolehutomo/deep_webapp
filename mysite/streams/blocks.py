@@ -63,3 +63,29 @@ class SimpleRichtextBlock(blocks.RichTextBlock):
         template = "streams/richtext_block.html"
         icon = "edit"
         label = "Simple RichText"
+
+
+from wagtail import blocks
+from wagtail.images.blocks import ImageChooserBlock
+
+class HorizontalListItemBlock(blocks.StructBlock):
+    """Single item in a horizontal list: image and caption text"""
+    image = ImageChooserBlock(required=True)
+    text = blocks.CharBlock(required=True, max_length=100)
+
+    class Meta:
+        label = "Horizontal List Item"
+
+class HorizontalListBlock(blocks.StructBlock):
+    """A horizontal list of image-text items"""
+    title = blocks.CharBlock(required=False, help_text="Optional title for the list")
+
+    items = blocks.ListBlock(
+        HorizontalListItemBlock(),
+        label="List Items"
+    )
+
+    class Meta:
+        template = "streams/blocks/horizontal_list_block.html"
+        icon = "list-ul"
+        label = "Horizontal List"

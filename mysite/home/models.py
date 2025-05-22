@@ -46,7 +46,11 @@ class HomePage(Page):
 
     contentCard = StreamField(
         [
+            ("title_and_text", blocks.TitleAndTextBlock(classname='text_and_title')),
+            ("full_rich_text", blocks.RichtextBlock()),
+            ("simple_rich_text", blocks.SimpleRichtextBlock()),
             ("cards", blocks.CardBlock()),
+            ("horizontal_list", blocks.HorizontalListBlock()),
         ],
         null=True,
         use_json_field=True,
