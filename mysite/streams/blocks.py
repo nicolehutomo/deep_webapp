@@ -1,7 +1,7 @@
 """Streamfields are here"""
-
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.embeds.blocks import EmbedBlock
 
 class TitleAndTextBlock(blocks.StructBlock):
     """Title and text only"""
@@ -89,3 +89,12 @@ class HorizontalListBlock(blocks.StructBlock):
         template = "streams/blocks/horizontal_list_block.html"
         icon = "list-ul"
         label = "Horizontal List"
+    
+class VideoBlock(blocks.StructBlock):
+    """Embedded video with optional caption"""
+    video_url = EmbedBlock(required=True)
+    caption = blocks.CharBlock(required=False)
+    class Meta:
+        template = "streams/video_block.html"
+        icon = "media"
+        label = "Embedded Video"

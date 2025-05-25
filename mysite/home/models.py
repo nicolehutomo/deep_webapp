@@ -51,6 +51,7 @@ class HomePage(Page):
             ("simple_rich_text", blocks.SimpleRichtextBlock()),
             ("cards", blocks.CardBlock()),
             ("horizontal_list", blocks.HorizontalListBlock()),
+            ("video", blocks.VideoBlock())
         ],
         null=True,
         use_json_field=True,

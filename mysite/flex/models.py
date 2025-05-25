@@ -20,6 +20,7 @@ class FlexPage(Page):
             ("simple_rich_text", blocks.SimpleRichtextBlock()),
             ("cards", blocks.CardBlock()),
             ("horizontal_list", blocks.HorizontalListBlock()),
+            ("video", blocks.VideoBlock())
         ],
         use_json_field=True,
         null=True,
