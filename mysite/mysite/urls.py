@@ -29,7 +29,7 @@ urlpatterns = [
     path('no_video/', views.NoVideoView.as_view(), name='no_video'),
     path('camera_feed/', lambda r: StreamingHttpResponse(camera.generate_frames(camera.VideoCamera(), False),
                                                      content_type='multipart/x-mixed-replace; boundary=frame;')),
-    path('camera_feed_AI/', lambda r: StreamingHttpResponse(camera.generate_frames(camera.VideoCamera(), True),
+    path('camera_feed_AI/', lambda r: StreamingHttpResponse(camera.generate_frames(camera.VideoCamera()),
                                                      content_type='multipart/x-mixed-replace; boundary=frame;')),
     path('', include(wagtail_urls)),
 
