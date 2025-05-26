@@ -81,6 +81,7 @@
 {% endblock %}
 {% block extra_js %}
     <script type="text/javascript">
+      let dashboardInterval = null;
       var url = "../no_video/"
       document.getElementById("ntbtn1").addEventListener("click", function() {
         window.open(url, "_blank");
@@ -104,6 +105,9 @@
          document.getElementById('pushMe3').disabled = true;
          document.getElementById('pushMe4').disabled = false;
          document.getElementById('ntbtn1').disabled = false;
+         if (!dashboardInterval) {
+          dashboardInterval = setInterval(fetchDashboardData, 2000);
+         }
       }
       function changeTheVariableStop() {
          var iframevar1 = document.getElementById('frame1');
@@ -115,7 +119,12 @@
          document.getElementById('pushMe3').disabled = false;
          document.getElementById('pushMe4').disabled = true;
          document.getElementById('ntbtn1').disabled = true;
+         if (dashboardInterval) {
+              clearInterval(dashboardInterval);
+              dashboardInterval = null;
+            }
       }
+      
       const displayedTimestamps = new Set();
 
       function fetchDashboardData() {
@@ -141,9 +150,6 @@
               })
               .catch(error => console.error('Error fetching dashboard data:', error));
       }
-
-      // Poll every 1 second
-      setInterval(fetchDashboardData, 2000);
 
       document.getElementById('reset-dashboard').addEventListener('click', () => {
           const tableBody = document.querySelector('#dashboard-table-body');
