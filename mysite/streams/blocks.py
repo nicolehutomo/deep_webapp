@@ -6,8 +6,8 @@ from wagtail.embeds.blocks import EmbedBlock
 class TitleAndTextBlock(blocks.StructBlock):
     """Title and text only"""
 
-    title = blocks.CharBlock(required=True, help_text = 'Add your title')
-    text = blocks.TextBlock(required=True, help_text = 'Add additional text')
+    title = blocks.CharBlock(required=False, help_text = 'Add your title')
+    text = blocks.TextBlock(required=False, help_text = 'Add additional text')
 
     class Meta:
         template = "streams/title_and_text_block.html"
