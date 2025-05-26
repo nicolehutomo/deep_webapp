@@ -23,6 +23,8 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from pathlib import Path
 from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.http import JsonResponse
+from cam_app.camera import VideoCamera
 
 
 str_uuid = uuid.uuid4()  # The UUID for image uploading
@@ -33,8 +35,18 @@ class ScannerVideoView(View):
         return render(request, 'cam_app/video2.html')
 
 
-
 class NoVideoView(View):
     def get(self, request):
         # print(request.POST)
         return render(request, 'cam_app/no_video.html')
+    
+camera_instance = None
+
+def get_dashboard_data(request):
+    global camera_instance
+    if camera_instance is None:
+        camera_instance = VideoCamera()
+
+    _, _, dashboard = camera_instance.get_frame_with_detection()
+    return JsonResponse({'detections': dashboard})
+

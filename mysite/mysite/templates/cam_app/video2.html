@@ -6,6 +6,20 @@
         padding-top: 100px;
         background-color: rgb(222, 207, 184);
       }
+       table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid rgb(222, 207, 184);
+        }
+        th {
+            background-color: #444;
+            color: white;
+        }
     </style>
 {% endblock %}
 {% block content %}
@@ -36,10 +50,6 @@
       </center>
     <div class="videoWrapper">
         <style>
-        .videoWrapper {
-          position=absolute;
-          height=100%;
-        }
         .videoWrapper iframe {
           display: inline;
           height: 450px; width: 790px; border: 2px solid #ccc;
@@ -47,10 +57,24 @@
           position: relative;
         }
       </style>
-
       <!-- <img id="frame1" style="-webkit-user-select: none;" src="../no_video/" width="800px" height="700px"> -->
       <iframe id="frame1" class="responsive-iframe"  src="../no_video/" title="YouTube video player" frameborder="0" scrolling="no" ></iframe>
-
+      <table id="dashboard-table">
+          <thead>
+              <tr>
+                  <th>Timestamp</th>
+                  <th>Label</th>
+                  <th>Confidence</th>
+                  <th>Bounding Box</th>
+              </tr>
+          </thead>
+          <tbody id="dashboard-table-body">
+              <!-- Rows injected by JavaScript -->
+          </tbody>
+      </table> 
+      <button type ="button" id="reset-dashboard">Reset Dashboard</button>
+    </div>
+    <div>
     </div>
 </div>
 </center>
@@ -92,5 +116,39 @@
          document.getElementById('pushMe4').disabled = true;
          document.getElementById('ntbtn1').disabled = true;
       }
+      const displayedTimestamps = new Set();
+
+      function fetchDashboardData() {
+          fetch('/get_dashboard_data/')
+              .then(response => response.json())
+              .then(data => {
+                  const tableBody = document.querySelector('#dashboard-table-body');
+
+                  data.detections.forEach(item => {
+                      // Only add if timestamp not already shown
+                      if (!displayedTimestamps.has(item.timestamp)) {
+                          const row = document.createElement('tr');
+                          row.innerHTML = `
+                              <td>${item.timestamp}</td>
+                              <td>${item.label}</td>
+                              <td>${item.confidence}</td>
+                              <td>[${item.bounding_box.join(', ')}]</td>
+                          `;
+                          tableBody.appendChild(row);
+                          displayedTimestamps.add(item.timestamp);
+                      }
+                  });
+              })
+              .catch(error => console.error('Error fetching dashboard data:', error));
+      }
+
+      // Poll every 1 second
+      setInterval(fetchDashboardData, 2000);
+
+      document.getElementById('reset-dashboard').addEventListener('click', () => {
+          const tableBody = document.querySelector('#dashboard-table-body');
+          tableBody.innerHTML = '';       
+          displayedTimestamps.clear();    
+      });
     </script>
 {% endblock %}

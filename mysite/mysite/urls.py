@@ -31,6 +31,7 @@ urlpatterns = [
                                                      content_type='multipart/x-mixed-replace; boundary=frame;')),
     path('camera_feed_AI/', lambda r: StreamingHttpResponse(camera.generate_frames(camera.VideoCamera()),
                                                      content_type='multipart/x-mixed-replace; boundary=frame;')),
+    path('get_dashboard_data/', views.get_dashboard_data, name='get_dashboard_data'),
     path('', include(wagtail_urls)),
 
 ]

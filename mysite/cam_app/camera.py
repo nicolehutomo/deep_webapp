@@ -26,11 +26,13 @@ class VideoCamera(object):
         # self.video = cv2.VideoCapture('video.mp4')
         self.model = YOLO('./yolo11/best.pt')
         self.class_names = ['Cracks', 'flaking', 'joints', 'squats']
+        self.dashboard = []
 
     def __del__(self):
         self.video.release()
 
     def get_frame_with_detection(self):
+        self.dashboard.clear()
         success, image = self.video.read()
         if not success or image is None:
             # Log an error or warning (optional, but good for debugging)
@@ -114,6 +116,15 @@ class VideoCamera(object):
             # Draw on the ORIGINAL 'image' using scaled coordinates
             cv2.rectangle(image, (x1_orig, y1_orig), (x2_orig, y2_orig), (0, 255, 0), 2)
             cv2.putText(image, text_to_display, (x1_orig, y1_orig - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+            self.dashboard
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+            self.dashboard.append({
+                "label": label,
+                "confidence": round(float(confidence), 2),
+                "bounding_box": [x1_orig, y1_orig, x2_orig, y2_orig],
+                "timestamp": timestamp
+            })
         
         outputImage = image # This 'image' is the one with drawings
         
@@ -127,7 +138,7 @@ class VideoCamera(object):
             ret_err, error_jpeg = cv2.imencode('.jpg', error_img)
             if ret_err: return error_jpeg.tobytes(), error_img
             else: return b'', None # Last resort
-        return outputImagetoReturn.tobytes(), outputImage
+        return outputImagetoReturn.tobytes(), outputImage, self.dashboard
     
     def get_frame_without_detection(self):
         success, image = self.video.read()
@@ -142,7 +153,7 @@ class VideoCamera(object):
 def generate_frames(camera):
     try:
         while True:
-            frame, img = camera.get_frame_with_detection()
+            frame, img , dashboard1 = camera.get_frame_with_detection()
             if frame is not None:
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
